@@ -1,2 +1,5 @@
-body {margin: 0;padding: 0; background-color:black; color:white}
+body {margin: 0;padding: 0; background-color:black; color:white; font-size: 14px;}
 button.action { background-color:white; border:1px solid lightgray; cursor:pointer; height:25px; width:150px }
+section#action, section#resources { border:1px solid lightgray }
+section#action label, section#resources label {width:100%}
+#main { padding:30px }

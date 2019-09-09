@@ -3,16 +3,28 @@
     <head>
         <meta charset="utf-8">
         <title>Idle zombie</title>
-        <link rel="stylesheet" type="text/css" href="/css/interface.css" />
+        <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
         <link rel="stylesheet" type="text/css" href="/css/progressButton.css" />
+        <link rel="stylesheet" type="text/css" href="/css/interface.css" />
     </head>
     <body>
-		<section id="stats">
-			
-		</section>
-		<button class="action progress-button" id="garbage">Search the garbage</button>
+		<div class="container-fluid" id="main">
+			<div class="row">
+				<section class="col-5" id="action">
+					<label>Action</label>
+					<button class="action progress-button" id="garbage">Search the garbage</button>
+				</section>
+				<section class="col-5 offset-2" id="resources">
+					<label>Resources</label>
+					<div id="stats">
+					
+					</div>
+				</section>
+			</div>
+		</div>
     </body>
     <script src="/js/lib/jquery-3.4.1.min.js"></script>
+    <script src="/js/lib/bootstrap.min.js"></script>
     <script src="/js/lib/progressButton.js"></script>
     <script src="/js/main.js"></script>
 </html>
