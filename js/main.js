@@ -52,7 +52,6 @@ $(document).ready(function() {
 	
 	Game.msg = function(text) {
 		$("#logs").prepend('<p>'+text+'</p>');
-		console.log($("#logs > p").length);
 		if ($("#logs > p").length>10) $("#logs p").last().remove();
 	}
 	
