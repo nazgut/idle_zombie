@@ -7,16 +7,16 @@ $(document).ready(function() {
 					'speed':{'val':1, 'max':100}
 				};
 	var resources = {
-						'food':{'count':0, 'show':true},
-						'water':{'count':0, 'show':true},
-						'medical':{'count':0, 'show':false},
-						'weapon':{'count':0, 'show':false},
-						'ammo':{'count':0, 'show':false},
-						'wood':{'count':0, 'show':false},
-						'stone':{'count':0, 'show':false},
-						'iron':{'count':0, 'show':false},
-						'survivor':{'count':0, 'show':false},
-						'gold':{'count':0, 'show':false}
+						'food':{'count':0, 'show':true, 'add':0},
+						'water':{'count':0, 'show':true, 'add':0},
+						'medical':{'count':0, 'show':false, 'add':0},
+						'weapon':{'count':0, 'show':false, 'add':0},
+						'ammo':{'count':0, 'show':false, 'add':0},
+						'wood':{'count':0, 'show':false, 'add':0},
+						'stone':{'count':0, 'show':false, 'add':0},
+						'iron':{'count':0, 'show':false, 'add':0},
+						'survivor':{'count':0, 'show':false, 'add':0},
+						'gold':{'count':0, 'show':false, 'add':0}
 					};
 
 	Game.init = function() {
@@ -50,9 +50,16 @@ $(document).ready(function() {
 
 	Game.res = function() {
 		$("#res").html("");
+		var cls = '';
 		$.each( resources, function( i, val ) {
 			if (val.show==true) {
-				$("#res").append(i+': <span id="res_'+i+'">'+val.count+'</span><br/>');
+				if (val.add) {
+					if (val.add<0) cls = 'red';
+					val.count += val.add;
+					$("#res").append(i+': <span id="res_'+i+'">'+val.count+'<span class="math '+cls+'">'+val.add+'</span></span><br/>');
+					val.add = 0;
+				}
+				else { $("#res").append(i+': <span id="res_'+i+'">'+val.count+'</span><br/>'); }
 			}
 		});
 	};
@@ -85,16 +92,31 @@ $(document).ready(function() {
 		if ($("#logs > p").length>10) $("#logs p").last().remove();
 	}
 	
+	Game.eat = function(what) {
+		
+	}
+	
+	Game.logic = function() {
+		if (resources.food.count>0 && stats.calories.val<stats.calories.max) {
+			resources.food.add -= 1;
+			stats.calories.val += 5;
+		}
+		if (resources.water.count>0 && stats.dehydration.val<stats.dehydration.max) {
+			resources.water.add -= 1;
+			stats.dehydration.val += 5;
+		}
+	}
+	
 	$( "#garbage" ).click(function() {
 		$(this).progressTimed(10/stats.speed.val);
 		$(this).on('progress-finish', function() {
 			var msg = '';
 			if (Game.getRndInteger(1,6) < 4) {
-				resources.food.count ++;
+				resources.food.add += 1;
 				msg = "1 food";
 			}
 			else {
-				resources.water.count ++;
+				resources.water.add +=1;
 				msg = "1 water";
 			}
 			$(this).off('progress-finish');
@@ -103,6 +125,7 @@ $(document).ready(function() {
 	});
 	
 	Game.init();
-	window.setInterval(function(){Game.res(); Game.stats();},100);
+	window.setInterval(function(){Game.res(); Game.stats();},500);
+	window.setInterval(function(){Game.logic()},1000);
 	window.setInterval(function(){Game.saveFile()},5000);
 });

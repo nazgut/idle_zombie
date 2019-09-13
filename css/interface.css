@@ -5,3 +5,8 @@ section#action label, section#resources, section#msg label {width:100%}
 #main { padding:30px }
 section#msg{ margin-top:20px; }
 section#msg p { margin-bottom:0px }
+span.math{margin-left:10px; color:green}
+span.math.red{color:red}
+
+span.math:before{content:"+"}
+span.math.red:before{content:""}
