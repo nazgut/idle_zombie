@@ -10,3 +10,4 @@ span.math.red{color:red}
 
 span.math:before{content:"+"}
 span.math.red:before{content:""}
+.hidde{ display:none }

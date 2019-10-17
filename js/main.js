@@ -7,22 +7,21 @@ $(document).ready(function() {
 					'speed':{'val':1, 'max':100}
 				};
 	var resources = {
-						'food':{'count':0, 'show':true, 'add':0},
-						'water':{'count':0, 'show':true, 'add':0},
-						'medical':{'count':0, 'show':false, 'add':0},
-						'weapon':{'count':0, 'show':false, 'add':0},
-						'ammo':{'count':0, 'show':false, 'add':0},
-						'wood':{'count':0, 'show':false, 'add':0},
-						'stone':{'count':0, 'show':false, 'add':0},
-						'iron':{'count':0, 'show':false, 'add':0},
-						'survivor':{'count':0, 'show':false, 'add':0},
-						'gold':{'count':0, 'show':false, 'add':0}
+						'food':{'val':0, 'show':true},
+						'water':{'val':0, 'show':true},
+						'medical':{'val':0, 'show':false},
+						'weapon':{'val':0, 'show':false},
+						'ammo':{'val':0, 'show':false},
+						'wood':{'val':0, 'show':false},
+						'stone':{'val':0, 'show':false},
+						'iron':{'val':0, 'show':false},
+						'survivor':{'val':0, 'show':false},
+						'gold':{'val':0, 'show':false}
 					};
 
 	Game.init = function() {
 		Game.loadFile();
-		Game.res();
-		Game.stats();
+		Game.interface();
 	};
 	
 	Game.saveFile = function(){
@@ -47,20 +46,27 @@ $(document).ready(function() {
 	Game.getRndInteger = function(min, max) {
 		return Math.floor(Math.random() * (max - min + 1) ) + min;
 	};
-
-	Game.res = function() {
-		$("#res").html("");
+	
+	Game.updateResource = function(res, num, id) {
 		var cls = '';
-		$.each( resources, function( i, val ) {
-			if (val.show==true) {
-				if (val.add) {
-					if (val.add<0) cls = 'red';
-					val.count += val.add;
-					$("#res").append(i+': <span id="res_'+i+'">'+val.count+'<span class="math '+cls+'">'+val.add+'</span></span><br/>');
-					val.add = 0;
-				}
-				else { $("#res").append(i+': <span id="res_'+i+'">'+val.count+'</span><br/>'); }
+		
+		if (id=='res') resources[res].val += num;
+		else stats[res].val += num;
+		
+		if (num<0) cls = 'red';
+		$("#"+id+"_"+res).html(resources[res].val).next().removeClass("hidde").addClass(cls).html(num);
+		window.setInterval(function(){ $("#"+id+"_"+res).next().attr("class", "math hidde").html(""); },1000);
+	}; 
+
+	Game.interface = function() {
+		$.each( resources, function( i, res ) {
+			if (res.show==true) {
+				$("#res").append(i+': <span id="res_'+i+'">'+res.val+'</span><span class="math hidde"></span><br/>');
 			}
+		});
+		
+		$.each( stats, function( i, res ) {
+			$("#stats").append(i+': <span id="stats_'+i+'">'+res.val+'</span><span class="math hidde"></span><br/>');
 		});
 	};
 	
@@ -78,13 +84,10 @@ $(document).ready(function() {
 		}
 	}
 	
+	//To Delete
 	Game.stats = function() {
-		$("#stats").html("");
 		Game.checkhungry(stats.calories.val);
 		Game.checkhungry(stats.dehydration.val);
-		$.each( stats, function( i, val ) {
-			$("#stats").append(i+': <span id="stats_'+i+'">'+val.val+'</span><br/>');
-		});
 	};
 	
 	Game.msg = function(text) {
@@ -92,6 +95,7 @@ $(document).ready(function() {
 		if ($("#logs > p").length>10) $("#logs p").last().remove();
 	}
 	
+	// To Do
 	Game.eat = function(what) {
 		
 	}
@@ -112,11 +116,11 @@ $(document).ready(function() {
 		$(this).on('progress-finish', function() {
 			var msg = '';
 			if (Game.getRndInteger(1,6) < 4) {
-				resources.food.add += 1;
+				Game.updateResource('food', 1, 'res');
 				msg = "1 food";
 			}
 			else {
-				resources.water.add +=1;
+				Game.updateResource('water', 1, 'res');
 				msg = "1 water";
 			}
 			$(this).off('progress-finish');
@@ -125,7 +129,6 @@ $(document).ready(function() {
 	});
 	
 	Game.init();
-	window.setInterval(function(){Game.res(); Game.stats();},500);
 	window.setInterval(function(){Game.logic()},1000);
 	window.setInterval(function(){Game.saveFile()},5000);
 });
